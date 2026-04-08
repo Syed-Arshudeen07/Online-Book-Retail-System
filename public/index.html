@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InkWell — Digital Bookstore</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+   :root {
+    --ink: #1a1208;
+    --cream: #faf6ef;
+    --warm: #f0e8d8;
+    --gold: #c9973a;
+    --gold-light: #e8c87a;
+    --rust: #c0522a;
+    --sage: #4a6741;
+    --muted: #8a7d6a;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 24px rgba(26,18,8,0.10);
+    --shadow-hover: 0 12px 48px rgba(26,18,8,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw;
+    height: 70px;
+    background: rgba(250,246,239,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,151,58,0.15);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 24px rgba(26,18,8,0.08); }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .logo span { color: var(--gold); }
+
+  .nav-links {
+    display: flex; gap: 2.2rem; list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-actions { display: flex; align-items: center; gap: 1rem; }
+
+  .btn-cart {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 40px;
+    padding: 0.55rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-cart:hover { background: var(--gold); transform: scale(1.04); }
+
+  .cart-count {
+    background: var(--rust);
+    color: #fff;
+    border-radius: 50%;
+    width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700;
+  }
+
+  .btn-login {
+    background: transparent; color: var(--ink);
+    border: 1.5px solid rgba(26,18,8,0.2); border-radius: 40px;
+    padding: 0.5rem 1.1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-login:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--ink); border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  /* ── MOBILE MENU ── */
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 70px; left: 0; right: 0;
+    background: var(--cream);
+    border-bottom: 1px solid rgba(201,151,58,0.2);
+    padding: 1.5rem 5vw;
+    z-index: 99;
+    flex-direction: column; gap: 1.2rem;
+    animation: slideDown 0.25s ease;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    text-decoration: none; font-weight: 500;
+    color: var(--ink); font-size: 1rem;
+    border-bottom: 1px solid var(--warm); padding-bottom: 0.8rem;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 100px 5vw 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(201,151,58,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -80px; left: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(192,82,42,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .hero-text { position: relative; z-index: 1; }
+
+  .hero-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--gold);
+    border: 1px solid var(--gold-light);
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 5vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 640px;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 40px;
+    padding: 0.85rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(201,151,58,0.3);
+  }
+
+  .btn-secondary {
+    background: transparent; color: var(--ink);
+    border: 1.5px solid rgba(26,18,8,0.2); border-radius: 40px;
+    padding: 0.85rem 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-secondary:hover {
+    border-color: var(--gold); color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 3rem;
+  }
+  .hero-stat strong {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; color: var(--ink);
+  }
+  .hero-stat span { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+
+
+
+
+  /* ── SEARCH ── */
+  .search-section {
+    padding: 5rem 5vw 3rem;
+    text-align: center;
+  }
+  .search-box {
+    display: flex; align-items: center;
+    max-width: 560px; margin: 0 auto;
+    background: #fff;
+    border: 1.5px solid rgba(26,18,8,0.1);
+    border-radius: 50px;
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+    box-shadow: 0 4px 20px rgba(26,18,8,0.06);
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .search-box:focus-within {
+    box-shadow: 0 8px 32px rgba(201,151,58,0.15);
+    border-color: var(--gold);
+  }
+  .search-box input {
+    flex: 1; border: none; outline: none;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+    background: transparent; color: var(--ink);
+  }
+  .search-box input::placeholder { color: var(--muted); }
+  .search-box button {
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 40px;
+    padding: 0.7rem 1.5rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .search-box button:hover { background: var(--gold); }
+
+  /* ── CATEGORY PILLS ── */
+  .category-pills {
+    display: flex; gap: 0.7rem; flex-wrap: wrap;
+    justify-content: center; margin-top: 1.5rem;
+  }
+  .pill {
+    border: 1.5px solid rgba(26,18,8,0.15); border-radius: 30px;
+    padding: 0.45rem 1.1rem; font-size: 0.83rem; font-weight: 500;
+    cursor: pointer; background: transparent; color: var(--muted);
+    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .pill.active, .pill:hover {
+    background: var(--ink); border-color: var(--ink); color: var(--cream);
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 2.5rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700; line-height: 1.15;
+  }
+  .section-title span { color: var(--gold); }
+  .section-link {
+    font-size: 0.85rem; color: var(--muted); text-decoration: none;
+    font-weight: 500; letter-spacing: 0.04em;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .section-link:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* ── BOOKS GRID ── */
+  .books-section { padding: 3rem 5vw; }
+
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+
+  .book-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s cubic-bezier(.23,1,.32,1), box-shadow 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+  .book-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+  }
+  .book-card:hover .book-overlay { opacity: 1; }
+
+  .book-cover {
+    width: 100%; aspect-ratio: 3/4;
+    display: flex; align-items: flex-end;
+    padding: 1.2rem;
+    position: relative; overflow: hidden;
+  }
+
+  .book-overlay {
+    position: absolute; inset: 0;
+    background: rgba(26,18,8,0.5);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.25s;
+    gap: 0.8rem;
+  }
+  .ov-btn {
+    background: var(--cream); color: var(--ink);
+    border: none; border-radius: 30px;
+    padding: 0.55rem 1.1rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .ov-btn:hover { background: var(--gold); transform: scale(1.05); }
+  .ov-btn.wish {
+    padding: 0.55rem; border-radius: 50%; font-size: 1rem;
+    background: rgba(250,246,239,0.9);
+  }
+
+  .book-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--rust); color: #fff;
+    border-radius: 6px; padding: 0.25rem 0.6rem;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .book-badge.new { background: var(--sage); }
+  .book-badge.free { background: var(--gold); color: var(--ink); }
+
+  .book-info { padding: 1rem 1.1rem 1.2rem; }
+
+  .book-genre {
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--gold); font-weight: 600; margin-bottom: 0.4rem;
+  }
+
+  .book-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700; line-height: 1.35;
+    margin-bottom: 0.25rem; color: var(--ink);
+  }
+
+  .book-author { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.8rem; }
+
+  .book-footer { display: flex; justify-content: space-between; align-items: center; }
+
+  .book-price {
+    font-size: 1.05rem; font-weight: 700; color: var(--ink);
+    font-family: 'Playfair Display', serif;
+  }
+  .book-price .original {
+    font-size: 0.8rem; color: var(--muted); text-decoration: line-through;
+    font-weight: 400; margin-left: 0.4rem; font-family: 'DM Sans', sans-serif;
+  }
+
+  .stars { color: var(--gold); font-size: 0.78rem; letter-spacing: 1px; }
+
+
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-section { padding: 5rem 5vw; background: var(--warm); }
+
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem; margin-top: 2.5rem;
+  }
+
+  .testimonial-card {
+    background: #fff; border-radius: 16px;
+    padding: 1.8rem;
+    box-shadow: 0 2px 16px rgba(26,18,8,0.06);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .testimonial-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+  .testi-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 1rem; }
+  .testi-text {
+    font-size: 0.92rem; color: var(--muted); line-height: 1.7;
+    font-style: italic; margin-bottom: 1.3rem;
+  }
+  .testi-author { display: flex; align-items: center; gap: 0.8rem; }
+  .testi-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.85rem; color: #fff;
+  }
+  .testi-name { font-weight: 600; font-size: 0.88rem; color: var(--ink); }
+  .testi-role { font-size: 0.75rem; color: var(--muted); }
+
+  /* ── NEWSLETTER ── */
+  .newsletter-section {
+    padding: 5rem 5vw;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .newsletter-section::before {
+    content: '"';
+    position: absolute; top: -60px; left: 5vw;
+    font-family: 'Playfair Display', serif;
+    font-size: 20rem; font-weight: 900;
+    color: rgba(201,151,58,0.05);
+    line-height: 1; pointer-events: none;
+  }
+  .newsletter-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 700; margin-bottom: 0.8rem;
+  }
+  .newsletter-section p { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+
+  .newsletter-form {
+    display: flex; max-width: 480px; margin: 0 auto;
+    background: #fff;
+    border: 1.5px solid rgba(26,18,8,0.1);
+    border-radius: 50px;
+    padding: 0.4rem 0.4rem 0.4rem 1.4rem;
+    box-shadow: 0 4px 20px rgba(26,18,8,0.06);
+  }
+  .newsletter-form input {
+    flex: 1; border: none; outline: none;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    background: transparent; color: var(--ink);
+  }
+  .newsletter-form button {
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 40px;
+    padding: 0.7rem 1.4rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+    cursor: pointer; transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .newsletter-form button:hover { background: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: rgba(250,246,239,0.7);
+    padding: 4rem 5vw 2rem;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem; margin-bottom: 3rem;
+  }
+  .footer-brand .logo { color: var(--cream); margin-bottom: 1rem; display: block; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.7; max-width: 260px; }
+
+  .footer-col h4 {
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--gold); font-weight: 600; margin-bottom: 1.2rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-col a {
+    font-size: 0.88rem; color: rgba(250,246,239,0.55); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--cream); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(250,246,239,0.1);
+    padding-top: 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.82rem; flex-wrap: wrap; gap: 1rem;
+  }
+
+  /* ── CART DRAWER ── */
+  .cart-overlay {
+    position: fixed; inset: 0; background: rgba(26,18,8,0.4);
+    z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+  .cart-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 380px; max-width: 100vw;
+    background: var(--cream);
+    z-index: 201;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(.23,1,.32,1);
+    display: flex; flex-direction: column;
+    box-shadow: -8px 0 40px rgba(26,18,8,0.15);
+  }
+  .cart-drawer.open { transform: translateX(0); }
+
+  .cart-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid rgba(26,18,8,0.1);
+  }
+  .cart-header h3 {
+    font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700;
+  }
+  .close-btn {
+    background: none; border: none; font-size: 1.5rem; cursor: pointer;
+    color: var(--muted); transition: color 0.2s; line-height: 1;
+  }
+  .close-btn:hover { color: var(--ink); }
+
+  .cart-items { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; }
+
+  .cart-empty {
+    text-align: center; padding: 3rem 1rem;
+    color: var(--muted); font-style: italic;
+    font-family: 'Playfair Display', serif; font-size: 1.05rem;
+  }
+
+  .cart-item {
+    display: flex; gap: 1rem; padding: 1rem 0;
+    border-bottom: 1px solid rgba(26,18,8,0.07);
+  }
+  .ci-cover {
+    width: 50px; height: 68px; border-radius: 6px; flex-shrink: 0;
+  }
+  .ci-info { flex: 1; }
+  .ci-title { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .ci-author { font-size: 0.76rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .ci-price { font-size: 0.92rem; font-weight: 700; color: var(--gold); }
+  .ci-remove {
+    background: none; border: none; color: var(--muted); cursor: pointer;
+    font-size: 1.1rem; transition: color 0.2s; align-self: flex-start;
+    padding: 0;
+  }
+  .ci-remove:hover { color: var(--rust); }
+
+  .cart-footer {
+    padding: 1rem 1.5rem 1.5rem;
+    border-top: 1px solid rgba(26,18,8,0.1);
+  }
+  .cart-total {
+    display: flex; justify-content: space-between;
+    font-size: 1rem; font-weight: 600; margin-bottom: 1rem;
+  }
+  .cart-total strong { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+
+  .btn-checkout {
+    width: 100%; background: var(--ink); color: var(--cream);
+    border: none; border-radius: 40px; padding: 1rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .btn-checkout:hover { background: var(--gold); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--ink); color: var(--cream);
+    padding: 0.8rem 1.8rem; border-radius: 40px;
+    font-size: 0.88rem; font-weight: 500;
+    box-shadow: 0 8px 32px rgba(26,18,8,0.25);
+    z-index: 300;
+    transition: transform 0.35s cubic-bezier(.23,1,.32,1), opacity 0.3s;
+    opacity: 0; pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+
+
+  /* ── WHY INKWELL ── */
+  .why-section {
+    padding: 5rem 5vw;
+    background: var(--cream);
+  }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .why-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2rem 1.8rem;
+    border: 1px solid rgba(26,18,8,0.07);
+    box-shadow: 0 2px 16px rgba(26,18,8,0.05);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .why-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .why-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    width: 56px; height: 56px;
+    background: var(--warm);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .why-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700;
+    margin-bottom: 0.6rem; color: var(--ink);
+  }
+
+  .why-card p {
+    font-size: 0.88rem; color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── BACK TO TOP ── */
+  .back-to-top {
+    position: fixed;
+    bottom: 2rem; right: 2rem;
+    width: 46px; height: 46px;
+    background: var(--ink); color: var(--cream);
+    border: none; border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(26,18,8,0.2);
+    transition: background 0.2s, transform 0.2s, opacity 0.3s;
+    opacity: 0; pointer-events: none;
+    z-index: 150;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .back-to-top.visible { opacity: 1; pointer-events: all; }
+  .back-to-top:hover { background: var(--gold); transform: translateY(-3px); }
+
+
+  @media (max-width: 900px) {
+    .featured-banner { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .why-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 600px) {
+    .books-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .hero-stats { gap: 1.5rem; }
+    .hero-stats strong { font-size: 1.4rem; }
+    .why-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cart Overlay & Drawer -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3>Your Library 📚</h3>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <p class="cart-empty">Your cart is empty.<br>Find something to read!</p>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span>Total</span>
+      <strong id="cartTotal">$0.00</strong>
+    </div>
+    <button class="btn-checkout" onclick="completePurchase()">Checkout →</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="index.html" class="logo">InkWell<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Discover</a></li>
+    <li><a href="bestsellers.html">Bestsellers</a></li>
+    <li><a href="categories.html">Categories</a></li>
+    <li><a href="deals.html">Deals</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="login.html" class="btn-login">Login</a>
+    <button class="btn-cart" onclick="toggleCart()">
+      🛒 Cart <span class="cart-count" id="cartCountBadge">0</span>
+    </button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Discover</a>
+  <a href="bestsellers.html">Bestsellers</a>
+  <a href="categories.html">Categories</a>
+  <a href="deals.html">Deals</a>
+  <a href="about.html">About</a>
+  <a href="login.html">Login</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <span class="hero-label">✦ New arrivals weekly</span>
+    <h1>Worlds live<br>in every <em>page</em><br>you turn.</h1>
+    <p class="hero-desc">Discover over 50,000 curated ebooks across every genre — from gripping mysteries to sweeping fantasy epics, timeless classics to cutting-edge non-fiction. Every title is handpicked by our editors, beautifully formatted for any screen, and available for instant download the moment you check out. No subscriptions, no waiting, no limits. Just great books, always at your fingertips.</p>
+    <div class="hero-actions">
+      <a href="#books" class="btn-primary">Browse Books</a>
+      <a href="categories.html" class="btn-secondary">Free Previews</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>50K+</strong>
+        <span>eBooks</span>
+      </div>
+      <div class="hero-stat">
+        <strong>120K</strong>
+        <span>Readers</span>
+      </div>
+      <div class="hero-stat">
+        <strong>4.9★</strong>
+        <span>Rating</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+
+<!-- SEARCH -->
+<section class="search-section">
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search for books, authors, genres…" oninput="filterBooks()">
+    <button onclick="filterBooks()">Search</button>
+  </div>
+  <div class="category-pills" id="categoryPills">
+    <button class="pill active" onclick="selectCategory(this, 'All')">All</button>
+    <button class="pill" onclick="selectCategory(this, 'Fiction')">Fiction</button>
+    <button class="pill" onclick="selectCategory(this, 'Non-Fiction')">Non-Fiction</button>
+    <button class="pill" onclick="selectCategory(this, 'Mystery')">Mystery</button>
+    <button class="pill" onclick="selectCategory(this, 'Romance')">Romance</button>
+    <button class="pill" onclick="selectCategory(this, 'Fantasy')">Fantasy</button>
+    <button class="pill" onclick="selectCategory(this, 'Self-Help')">Self-Help</button>
+    <button class="pill" onclick="selectCategory(this, 'Science')">Science</button>
+  </div>
+</section>
+
+<!-- BOOKS GRID -->
+<section class="books-section" id="books">
+  <div class="section-header">
+    <h2 class="section-title">Trending <span>Now</span></h2>
+    <a href="bestsellers.html" class="section-link">View all →</a>
+  </div>
+  <div class="books-grid" id="booksGrid"></div>
+</section>
+
+<!-- WHY INKWELL -->
+<section class="why-section">
+  <div class="section-header">
+    <h2 class="section-title">Why <span>InkWell?</span></h2>
+  </div>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">⚡</div>
+      <h3>Instant Download</h3>
+      <p>Get your books the second you check out. No waiting, no shipping — your library grows instantly, any time of day.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🔓</div>
+      <h3>100% DRM-Free</h3>
+      <p>Every book you buy is yours to keep. Read on any device, transfer freely, and never worry about losing access.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📱</div>
+      <h3>Read Anywhere</h3>
+      <p>Seamlessly switch between your phone, tablet, and desktop. Your progress syncs automatically across all devices.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🛡️</div>
+      <h3>Money-Back Guarantee</h3>
+      <p>Not satisfied? We offer a full refund within 7 days, no questions asked. Your trust matters more than the sale.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">✦</div>
+      <h3>Curated by Experts</h3>
+      <p>Every title in our store is handpicked by a team of editors and avid readers. No filler, just exceptional books.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">💸</div>
+      <h3>Fair Pricing</h3>
+      <p>No subscriptions or hidden fees. Pay once, own forever. We believe great literature should be accessible to everyone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="section-header">
+    <h2 class="section-title">Loved by <span>Readers</span></h2>
+  </div>
+  <div class="testimonials-grid" id="testimonialsGrid"></div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+  <h2>Get the best reads<br>in your inbox.</h2>
+  <p>Weekly curated picks, exclusive deals, and new arrivals. No spam, ever.</p>
+  <div class="newsletter-form">
+    <input type="email" placeholder="Your email address…">
+    <button onclick="showToast('📬 You\'re subscribed! Welcome to InkWell.')">Subscribe</button>
+  </div>
+</section>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">InkWell<span style="color:var(--gold)">.</span></a>
+      <p>The finest digital bookstore, curating the world's best literature for curious minds everywhere.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="bestsellers.html">Bestsellers</a></li>
+        <li><a href="categories.html">New Releases</a></li>
+        <li><a href="deals.html">Free Books</a></li>
+        <li><a href="categories.html">Coming Soon</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="about.html">Authors</a></li>
+        <li><a href="about.html">Careers</a></li>
+        <li><a href="about.html">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="about.html">Help Center</a></li>
+        <li><a href="about.html">Privacy</a></li>
+        <li><a href="about.html">Terms</a></li>
+        <li><a href="about.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 InkWell Digital Books. All rights reserved.</span>
+    <span style="color:rgba(250,246,239,0.4)">Made with ♥ for book lovers</span>
+  </div>
+</footer>
+<script src="auth.js"></script>
+<script>
+const books = [
+  { id:1, title:'The Cartographer of Lies', author:'Amara Voss', genre:'Mystery', price:12.99, original:16.99, rating:5, badge:'sale', cover:'linear-gradient(135deg,#2d3a4a,#4a6279)', emoji:'🗺️' },
+  { id:2, title:'When Stars Go Dark', author:'Priya Nakamura', genre:'Fiction', price:9.99, rating:5, badge:'new', cover:'linear-gradient(135deg,#1a1a2e,#4a2060)', emoji:'⭐' },
+  { id:3, title:'The Stoic Almanac', author:'Marcus Helm', genre:'Self-Help', price:0, rating:4, badge:'free', cover:'linear-gradient(135deg,#2d4a3e,#5a7a52)', emoji:'📜' },
+  { id:4, title:'Crimson Latitude', author:'Dario Vance', genre:'Romance', price:11.99, original:14.99, rating:5, badge:'sale', cover:'linear-gradient(135deg,#7a1a2a,#c04a5a)', emoji:'❤️' },
+  { id:5, title:'Echoes of the Deep', author:'Lena Frost', genre:'Fantasy', price:14.99, rating:4, cover:'linear-gradient(135deg,#1a3a5a,#2a6a8a)', emoji:'🌊' },
+  { id:6, title:'The Fermi Paradox', author:'Dr. Lin Wei', genre:'Science', price:13.99, rating:5, badge:'new', cover:'linear-gradient(135deg,#2a1a4a,#5a3a7a)', emoji:'🔭' },
+  { id:7, title:'Letters in Lavender', author:'Isla Bronte', genre:'Romance', price:8.99, rating:4, cover:'linear-gradient(135deg,#4a3a6a,#8a6aaa)', emoji:'💜' },
+  { id:8, title:'A Quiet Reckoning', author:'James Obi', genre:'Non-Fiction', price:15.99, rating:5, badge:'new', cover:'linear-gradient(135deg,#3a3020,#7a6a40)', emoji:'📖' },
+];
+
+const testimonials = [
+  { text:'InkWell completely transformed how I read. The curation is extraordinary — every recommendation has been a gem.', name:'Sarah M.', role:'Avid Reader · London', stars:5, color:'#c0522a' },
+  { text:'Finally a bookstore that feels like it was built by book lovers. The interface is beautiful and the selection is unmatched.', name:'James R.', role:'Novelist · New York', stars:5, color:'#4a6741' },
+  { text:'I\'ve downloaded over 200 books from InkWell. The DRM-free formats mean I can read on any device, anytime.', name:'Emily T.', role:'Teacher · Chicago', stars:5, color:'#c9973a' },
+  { text:'The picks alone are worth signing up for. It\'s like having a brilliant literary friend always by your side.', name:'David L.', role:'Designer · Austin', stars:4, color:'#2d4a3e' },
+  { text:'Incredible variety. I found obscure academic texts alongside bestsellers I\'d been meaning to read for years.', name:'Rachel K.', role:'Researcher · Boston', stars:5, color:'#7a3a5a' },
+  { text:'The reading experience is so smooth. Instant downloads, beautiful layouts — I\'m never going back to physical books.', name:'Mark H.', role:'Journalist · Seattle', stars:5, color:'#1a3a5a' },
+];
+
+// ── STATE ──
+window._inkwellBooks = books; // expose for My Library
+let cart = [];
+let activeCategory = 'All';
+let searchQuery = '';
+
+// Load cart from localStorage (per-user)
+async function loadCart() {
+  const items = await getCart();
+  cart = items.map(i => ({ ...i, id: i.book_id ?? i.id }));
+  updateCartUI();
+}
+
+function saveCart() { /* cart saved via API */ }
+
+// ── RENDER BOOKS ──
+function renderBooks() {
+  const grid = document.getElementById('booksGrid');
+  const filtered = books.filter(b => {
+    const matchCat = activeCategory === 'All' || b.genre === activeCategory;
+    const matchSearch = !searchQuery || 
+      b.title.toLowerCase().includes(searchQuery) ||
+      b.author.toLowerCase().includes(searchQuery) ||
+      b.genre.toLowerCase().includes(searchQuery);
+    return matchCat && matchSearch;
+  });
+
+  if (!filtered.length) {
+    grid.innerHTML = '<p style="color:var(--muted);font-style:italic;grid-column:1/-1;text-align:center;padding:3rem 0;">No books found. Try a different search!</p>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(b => `
+    <div class="book-card" data-id="${b.id}">
+      <div class="book-cover" style="background:${b.cover}">
+        <div class="book-overlay">
+          <button class="ov-btn" onclick="addToCart({id:${b.id},title:'${b.title.replace(/'/g,"\\'")}',author:'${b.author}',price:${b.price},cover:'${b.cover}'})">
+            ${b.price === 0 ? 'Get Free' : 'Add to Cart'}
+          </button>
+          <button class="ov-btn wish" title="Wishlist">♡</button>
+        </div>
+        ${b.badge ? `<span class="book-badge ${b.badge === 'new' ? 'new' : b.badge === 'free' ? 'free' : ''}">${b.badge === 'sale' ? '🔥 Sale' : b.badge === 'new' ? '✨ New' : '🎁 Free'}</span>` : ''}
+        <div style="font-size:3rem;z-index:0;opacity:0.3;position:absolute;bottom:10px;right:12px">${b.emoji}</div>
+      </div>
+      <div class="book-info">
+        <p class="book-genre">${b.genre}</p>
+        <h3 class="book-title">${b.title}</h3>
+        <p class="book-author">by ${b.author}</p>
+        <div class="book-footer">
+          <div class="book-price">
+            ${b.price === 0 ? 'Free' : '$' + b.price.toFixed(2)}
+            ${b.original ? `<span class="original">$${b.original.toFixed(2)}</span>` : ''}
+          </div>
+          <div class="stars">${'★'.repeat(b.rating)}${'☆'.repeat(5 - b.rating)}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── RENDER TESTIMONIALS ──
+function renderTestimonials() {
+  document.getElementById('testimonialsGrid').innerHTML = testimonials.map(t => `
+    <div class="testimonial-card">
+      <div class="testi-stars">${'★'.repeat(t.stars)}</div>
+      <p class="testi-text">"${t.text}"</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:${t.color}">${t.name[0]}</div>
+        <div>
+          <p class="testi-name">${t.name}</p>
+          <p class="testi-role">${t.role}</p>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── CART (MySQL API) ──
+async function addToCart(book) {
+  if (!getSession()) {
+    showToast('Please log in to add books to your cart!');
+    setTimeout(() => window.location.href = 'login.html', 1200);
+    return;
+  }
+  const existing = cart.find(i => (i.id ?? i.book_id) === book.id);
+  if (existing) { showToast(`"${book.title}" is already in your cart!`); return; }
+  cart.push(book);
+  updateCartUI();
+  showToast(`📚 "${book.title}" added to cart!`);
+  openCart();
+  const result = await addToCartAPI(book);
+  if (!result.ok) {
+    cart = cart.filter(i => i.id !== book.id);
+    updateCartUI();
+    showToast('❌ ' + (result.msg || 'Could not save to cart.'));
+  }
+}
+
+async function removeFromCart(id) {
+  cart = cart.filter(i => (i.id ?? i.book_id) !== id);
+  updateCartUI();
+  await removeFromCartAPI(id);
+}
+
+function updateCartUI() {
+  const count = cart.length;
+  document.getElementById('cartCountBadge').textContent = count;
+  const total = cart.reduce((s, i) => s + parseFloat(i.price ?? 0), 0);
+  document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+
+  const itemsEl = document.getElementById('cartItems');
+  if (!cart.length) {
+    itemsEl.innerHTML = '<p class="cart-empty">Your cart is empty.<br>Find something to read!</p>';
+    return;
+  }
+  itemsEl.innerHTML = cart.map(i => {
+    const id = i.book_id ?? i.id;
+    return `
+    <div class="cart-item">
+      <div class="ci-cover" style="background:${i.cover};border-radius:6px;display:flex;align-items:flex-end;padding:0.5rem;">
+        <span style="color:#fff;font-size:0.65rem;font-weight:600;line-height:1.2;">${i.title}</span>
+      </div>
+      <div class="ci-info">
+        <p class="ci-title">${i.title}</p>
+        <p class="ci-author">by ${i.author}</p>
+        <p class="ci-price">${parseFloat(i.price) === 0 ? 'Free' : '$' + parseFloat(i.price).toFixed(2)}</p>
+      </div>
+      <button class="ci-remove" onclick="removeFromCart(${id})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function openCart() {
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+}
+function toggleCart() {
+  document.getElementById('cartDrawer').classList.toggle('open');
+  document.getElementById('cartOverlay').classList.toggle('open');
+}
+
+// ── CHECKOUT ──
+async function completePurchase() {
+  if (!cart.length) { showToast('Your cart is empty!'); return; }
+  if (!getSession()) {
+    showToast('Please log in to purchase!');
+    setTimeout(() => window.location.href = 'login.html', 1200);
+    return;
+  }
+  const result = await checkoutAPI();
+  if (!result.ok) { showToast('❌ ' + (result.msg || 'Checkout failed.')); return; }
+  cart = [];
+  updateCartUI();
+  closeCart();
+  showToast('🎉 Purchase complete! Books added to your library!');
+}
+function selectCategory(el, cat) {
+  activeCategory = cat;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderBooks();
+}
+function filterBooks() {
+  searchQuery = document.getElementById('searchInput').value.toLowerCase();
+  renderBooks();
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── MOBILE MENU ──
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+
+
+// ── SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
+  document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
+});
+
+// ── INIT ──
+loadCart();
+renderBooks();
+renderTestimonials();
+initAuthNav(); // swap Login → username in nav
+</script>
+</body>
+</html>

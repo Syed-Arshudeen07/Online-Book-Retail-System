@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deals — InkWell</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1208;--cream:#faf6ef;--warm:#f0e8d8;--gold:#c9973a;--rust:#c0522a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:70px;background:rgba(250,246,239,0.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,151,58,0.15);}
+.logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--ink);text-decoration:none;}
+.logo span{color:var(--gold);}
+.nav-links{display:flex;gap:2.2rem;list-style:none;}
+.nav-links a{text-decoration:none;font-size:0.88rem;font-weight:500;color:#8a7d6a;text-transform:uppercase;}
+.nav-actions{display:flex;gap:1rem;}
+.btn-cart{display:flex;align-items:center;gap:0.5rem;background:var(--ink);color:var(--cream);border:none;border-radius:40px;padding:0.55rem 1.2rem;font-size:0.85rem;cursor:pointer;}
+.cart-count{background:var(--rust);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;}
+.btn-login{background:transparent;color:var(--ink);border:1.5px solid rgba(26,18,8,0.2);border-radius:40px;padding:0.5rem 1.1rem;font-size:0.85rem;text-decoration:none;}
+.hero-small{padding:120px 5vw 60px;text-align:center;background:linear-gradient(135deg,#fff5e6 0%,var(--cream) 100%);}
+.hero-small h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:900;margin-bottom:1rem;}
+.hero-small p{color:#8a7d6a;font-size:1.05rem;max-width:600px;margin:0 auto;}
+.deals-section{padding:4rem 5vw;}
+.deals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2rem;}
+.deal-card{background:#fff;border-radius:20px;padding:2rem;border:2px solid var(--gold);box-shadow:0 4px 24px rgba(201,151,58,0.15);transition:transform 0.25s;}
+.deal-card:hover{transform:translateY(-5px);}
+.deal-badge{display:inline-block;background:var(--rust);color:#fff;padding:0.4rem 1rem;border-radius:20px;font-size:0.75rem;font-weight:700;margin-bottom:1rem;text-transform:uppercase;}
+.deal-card h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:0.5rem;}
+.deal-card .author{color:#8a7d6a;font-size:0.9rem;margin-bottom:1rem;}
+.price-box{display:flex;align-items:baseline;gap:0.8rem;margin-bottom:1rem;}
+.price-now{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--ink);}
+.price-was{font-size:1.1rem;color:#8a7d6a;text-decoration:line-through;}
+.savings{color:var(--rust);font-size:0.85rem;font-weight:600;}
+.btn-add{width:100%;background:var(--ink);color:var(--cream);border:none;border-radius:40px;padding:0.85rem;font-size:0.9rem;font-weight:500;cursor:pointer;}
+.btn-add:hover{background:var(--gold);}
+footer{background:var(--ink);color:rgba(250,246,239,0.7);padding:4rem 5vw 2rem;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.footer-brand .logo{color:var(--cream);margin-bottom:1rem;display:block;}
+.footer-brand p{font-size:0.88rem;line-height:1.7;max-width:260px;}
+.footer-col h4{font-size:0.8rem;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.7rem;}
+.footer-col a{font-size:0.88rem;color:rgba(250,246,239,0.55);text-decoration:none;}
+.footer-bottom{border-top:1px solid rgba(250,246,239,0.1);padding-top:2rem;display:flex;justify-content:space-between;font-size:0.82rem;}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--cream);padding:0.8rem 1.8rem;border-radius:40px;font-size:0.88rem;box-shadow:0 8px 32px rgba(26,18,8,0.25);z-index:300;transition:transform 0.35s,opacity 0.3s;opacity:0;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+@media (max-width:900px){.footer-grid{grid-template-columns:1fr 1fr;}.nav-links{display:none;}}
+@media (max-width:600px){.deals-grid{grid-template-columns:1fr;}.footer-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<nav>
+<a href="index.html" class="logo">InkWell<span>.</span></a>
+<ul class="nav-links">
+<li><a href="index.html">Discover</a></li>
+<li><a href="bestsellers.html">Bestsellers</a></li>
+<li><a href="categories.html">Categories</a></li>
+<li><a href="deals.html">Deals</a></li>
+<li><a href="about.html">About</a></li>
+</ul>
+<div class="nav-actions">
+<a href="login.html" class="btn-login">Login</a>
+<button class="btn-cart" onclick="updateCartBadge()">🛒 Cart <span class="cart-count" id="cartCountBadge">0</span></button>
+</div>
+</nav>
+<section class="hero-small">
+<h1>🔥 Limited Time Deals</h1>
+<p>Incredible savings on premium ebooks. These deals won't last long — grab your favorites while they're discounted!</p>
+</section>
+<section class="deals-section">
+<div class="deals-grid" id="dealsGrid"></div>
+</section>
+<footer>
+<div class="footer-grid">
+<div class="footer-brand">
+<a href="index.html" class="logo">InkWell<span style="color:var(--gold)">.</span></a>
+<p>The finest digital bookstore, curating the world's best literature for curious minds everywhere.</p>
+</div>
+<div class="footer-col">
+<h4>Explore</h4>
+<ul><li><a href="bestsellers.html">Bestsellers</a></li><li><a href="categories.html">New Releases</a></li><li><a href="deals.html">Free Books</a></li></ul>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<ul><li><a href="about.html">About Us</a></li><li><a href="about.html">Authors</a></li></ul>
+</div>
+<div class="footer-col">
+<h4>Support</h4>
+<ul><li><a href="about.html">Help Center</a></li><li><a href="about.html">Privacy</a></li></ul>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2025 InkWell Digital Books. All rights reserved.</span>
+<span style="color:rgba(250,246,239,0.4)">Made with ♥ for book lovers</span>
+</div>
+</footer>
+<script src="auth.js"></script>
+<script>
+const deals=[
+{id:1,title:'The Cartographer of Lies',author:'Amara Voss',price:12.99,original:16.99,savings:'24%',cover:'linear-gradient(135deg,#2d3a4a,#4a6279)'},
+{id:4,title:'Crimson Latitude',author:'Dario Vance',price:11.99,original:14.99,savings:'20%',cover:'linear-gradient(135deg,#7a1a2a,#c04a5a)'},
+{id:3,title:'The Stoic Almanac',author:'Marcus Helm',price:0,original:12.99,savings:'FREE',cover:'linear-gradient(135deg,#2d4a3e,#5a7a52)'},
+{id:11,title:'Midnight Chronicles',author:'Elena Stone',price:9.99,original:15.99,savings:'37%',cover:'linear-gradient(135deg,#2a1a3a,#4a3a6a)'},
+{id:12,title:'The Last Horizon',author:'Tom Rivers',price:8.99,original:13.99,savings:'36%',cover:'linear-gradient(135deg,#3a4a5a,#5a7a9a)'}
+];
+function renderDeals(){document.getElementById('dealsGrid').innerHTML=deals.map(d=>`
+<div class="deal-card">
+<div class="deal-badge">${d.savings} OFF</div>
+<h3>${d.title}</h3>
+<p class="author">by ${d.author}</p>
+<div class="price-box">
+<div class="price-now">${d.price===0?'FREE':'$'+d.price.toFixed(2)}</div>
+${d.price>0?`<div class="price-was">$${d.original.toFixed(2)}</div>`:''}
+</div>
+<div class="savings">Save ${d.savings}</div>
+<button class="btn-add" onclick="addToCart({id:${d.id},title:'${d.title.replace(/'/g,"\\'")}',author:'${d.author}',price:${d.price},cover:'${d.cover}'})">
+${d.price===0?'Get Free':'Add to Cart'}
+</button>
+</div>`).join('');}
+function addToCart(book){
+  if(!getSession()){showToast('Please log in to add books!');setTimeout(()=>window.location.href='login.html',1200);return;}
+  getCart().then(items=>{
+    if(items.find(i=>i.book_id===book.id)){showToast(`"${book.title}" is already in your cart!`);return;}
+    addToCartAPI(book).then(()=>updateCartBadge());
+    showToast(`📚 "${book.title}" added to cart!`);
+    updateCartBadge();
+  });
+}
+async function updateCartBadge(){const items=await getCart();document.getElementById('cartCountBadge').textContent=items.length;}
+let toastTimer;function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3000);}
+updateCartBadge();renderDeals();initAuthNav();
+</script>
+</body>
+</html>

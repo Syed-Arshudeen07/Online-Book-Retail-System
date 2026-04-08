@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — InkWell</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1208;--cream:#faf6ef;--warm:#f0e8d8;--gold:#c9973a;--muted:#8a7d6a;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:70px;background:rgba(250,246,239,0.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,151,58,0.15);}
+.logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:var(--ink);text-decoration:none;}
+.logo span{color:var(--gold);}
+.nav-links{display:flex;gap:2.2rem;list-style:none;}
+.nav-links a{text-decoration:none;font-size:0.88rem;font-weight:500;color:var(--muted);text-transform:uppercase;}
+.nav-actions{display:flex;gap:1rem;}
+.btn-cart{display:flex;align-items:center;gap:0.5rem;background:var(--ink);color:var(--cream);border:none;border-radius:40px;padding:0.55rem 1.2rem;font-size:0.85rem;cursor:pointer;}
+.cart-count{background:#c0522a;color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;}
+.btn-login{background:transparent;color:var(--ink);border:1.5px solid rgba(26,18,8,0.2);border-radius:40px;padding:0.5rem 1.1rem;font-size:0.85rem;text-decoration:none;}
+.hero-about{padding:120px 5vw 80px;text-align:center;background:linear-gradient(135deg,var(--warm) 0%,var(--cream) 100%);}
+.hero-about h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:900;margin-bottom:1.5rem;line-height:1.1;}
+.hero-about p{color:var(--muted);font-size:1.15rem;max-width:700px;margin:0 auto;line-height:1.8;}
+.content-section{padding:5rem 5vw;max-width:900px;margin:0 auto;}
+.content-section h2{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;margin-bottom:1.5rem;}
+.content-section p{font-size:1.05rem;line-height:1.9;color:var(--muted);margin-bottom:1.5rem;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;padding:3rem 5vw;background:var(--warm);}
+.stat-box{text-align:center;}
+.stat-box strong{display:block;font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--ink);margin-bottom:0.5rem;}
+.stat-box span{font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
+.values-section{padding:5rem 5vw;background:#fff;}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;max-width:1200px;margin:2rem auto 0;}
+.value-card{padding:2rem;border-radius:16px;background:var(--cream);}
+.value-card h3{font-family:'Playfair Display',serif;font-size:1.3rem;margin-bottom:0.8rem;}
+.value-card p{color:var(--muted);line-height:1.7;}
+.cta-section{padding:5rem 5vw;text-align:center;background:linear-gradient(135deg,#fff5e6 0%,var(--cream) 100%);}
+.cta-section h2{font-family:'Playfair Display',serif;font-size:2.5rem;margin-bottom:1rem;}
+.cta-section p{color:var(--muted);font-size:1.05rem;margin-bottom:2rem;}
+.btn-primary{background:var(--ink);color:var(--cream);border:none;border-radius:40px;padding:1rem 2.5rem;font-size:1rem;font-weight:500;cursor:pointer;text-decoration:none;display:inline-block;}
+.btn-primary:hover{background:var(--gold);}
+footer{background:var(--ink);color:rgba(250,246,239,0.7);padding:4rem 5vw 2rem;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.footer-brand .logo{color:var(--cream);margin-bottom:1rem;display:block;}
+.footer-brand p{font-size:0.88rem;line-height:1.7;max-width:260px;}
+.footer-col h4{font-size:0.8rem;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.7rem;}
+.footer-col a{font-size:0.88rem;color:rgba(250,246,239,0.55);text-decoration:none;}
+.footer-bottom{border-top:1px solid rgba(250,246,239,0.1);padding-top:2rem;display:flex;justify-content:space-between;font-size:0.82rem;}
+@media (max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr);}.values-grid{grid-template-columns:1fr;}.footer-grid{grid-template-columns:1fr 1fr;}.nav-links{display:none;}}
+@media (max-width:600px){.stats-grid{grid-template-columns:1fr;}.footer-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+<a href="index.html" class="logo">InkWell<span>.</span></a>
+<ul class="nav-links">
+<li><a href="index.html">Discover</a></li>
+<li><a href="bestsellers.html">Bestsellers</a></li>
+<li><a href="categories.html">Categories</a></li>
+<li><a href="deals.html">Deals</a></li>
+<li><a href="about.html">About</a></li>
+</ul>
+<div class="nav-actions">
+<a href="login.html" class="btn-login">Login</a>
+<button class="btn-cart" onclick="updateCartBadge()">🛒 Cart <span class="cart-count" id="cartCountBadge">0</span></button>
+</div>
+</nav>
+<section class="hero-about">
+<h1>About InkWell</h1>
+<p>We're on a mission to make the world's best literature accessible to everyone, everywhere. One book at a time.</p>
+</section>
+<section class="stats-grid">
+<div class="stat-box">
+<strong>50K+</strong>
+<span>Books</span>
+</div>
+<div class="stat-box">
+<strong>120K</strong>
+<span>Readers</span>
+</div>
+<div class="stat-box">
+<strong>4.9★</strong>
+<span>Rating</span>
+</div>
+<div class="stat-box">
+<strong>2019</strong>
+<span>Founded</span>
+</div>
+</section>
+<section class="content-section">
+<h2>Our Story</h2>
+<p>InkWell was born from a simple belief: exceptional literature should be accessible to everyone. Founded in 2019 by a team of book lovers and technologists, we set out to create the digital bookstore we always wished existed — one that prioritizes curation over algorithms, quality over quantity, and readers over metrics.</p>
+<p>We carefully handpick every title in our catalog, working directly with publishers and authors to bring you the finest ebooks across every genre. From timeless classics to contemporary masterpieces, from niche academic texts to bestselling page-turners, we're building a library that reflects the full spectrum of human creativity and knowledge.</p>
+<p>Today, InkWell serves over 120,000 readers across 85 countries, delivering instant access to beautifully formatted ebooks that you truly own — no subscriptions, no DRM, no expiration dates. Just great books, forever yours.</p>
+</section>
+<section class="values-section">
+<div class="content-section">
+<h2>What We Stand For</h2>
+</div>
+<div class="values-grid">
+<div class="value-card">
+<h3>📚 Quality First</h3>
+<p>Every book in our store is carefully selected by our editorial team. We believe in curation over quantity.</p>
+</div>
+<div class="value-card">
+<h3>🔓 True Ownership</h3>
+<p>When you buy from InkWell, you own it forever. No DRM, no restrictions, no taking it back.</p>
+</div>
+<div class="value-card">
+<h3>🌍 Fair & Accessible</h3>
+<p>We work directly with publishers to offer fair pricing and support authors while keeping books affordable.</p>
+</div>
+<div class="value-card">
+<h3>🎨 Beautiful Design</h3>
+<p>Every ebook is professionally formatted for a premium reading experience on any device.</p>
+</div>
+<div class="value-card">
+<h3>💚 Reader-Centric</h3>
+<p>Your privacy matters. We don't track your reading habits or sell your data. Ever.</p>
+</div>
+<div class="value-card">
+<h3>🤝 Community-Driven</h3>
+<p>We listen to our readers and continuously improve based on your feedback and suggestions.</p>
+</div>
+</div>
+</section>
+<section class="cta-section">
+<h2>Join the InkWell Community</h2>
+<p>Discover your next favorite book today.</p>
+<a href="index.html" class="btn-primary">Start Reading →</a>
+</section>
+<footer>
+<div class="footer-grid">
+<div class="footer-brand">
+<a href="index.html" class="logo">InkWell<span style="color:var(--gold)">.</span></a>
+<p>The finest digital bookstore, curating the world's best literature for curious minds everywhere.</p>
+</div>
+<div class="footer-col">
+<h4>Explore</h4>
+<ul><li><a href="bestsellers.html">Bestsellers</a></li><li><a href="categories.html">New Releases</a></li><li><a href="deals.html">Free Books</a></li></ul>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<ul><li><a href="about.html">About Us</a></li><li><a href="about.html">Authors</a></li><li><a href="about.html">Careers</a></li></ul>
+</div>
+<div class="footer-col">
+<h4>Support</h4>
+<ul><li><a href="about.html">Help Center</a></li><li><a href="about.html">Privacy</a></li><li><a href="about.html">Terms</a></li></ul>
+</div>
+</div>
+<div class="footer-bottom">
+<span>© 2025 InkWell Digital Books. All rights reserved.</span>
+<span style="color:rgba(250,246,239,0.4)">Made with ♥ for book lovers</span>
+</div>
+</footer>
+<script src="auth.js"></script>
+<script>
+async function updateCartBadge(){const items=await getCart();document.getElementById('cartCountBadge').textContent=items.length;}
+updateCartBadge();
+initAuthNav();
+</script>
+</body>
+</html>

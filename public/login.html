@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — InkWell</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --cream: #faf6ef;
+    --warm: #f0e8d8;
+    --gold: #c9973a;
+    --gold-light: #e8c87a;
+    --rust: #c0522a;
+    --sage: #4a6741;
+    --muted: #8a7d6a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: absolute; top: -200px; left: -200px;
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(201,151,58,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 20s infinite ease-in-out;
+  }
+
+  body::after {
+    content: '';
+    position: absolute; bottom: -150px; right: -150px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(192,82,42,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 15s infinite ease-in-out reverse;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -30px); }
+  }
+
+  .logo {
+    position: absolute;
+    top: 2rem; left: 3rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+    z-index: 10;
+  }
+  .logo span { color: var(--gold); }
+
+  .back-link {
+    position: absolute;
+    top: 2rem; right: 3rem;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    z-index: 10;
+  }
+  .back-link:hover { color: var(--ink); }
+
+  .auth-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 440px;
+    padding: 0 2rem;
+  }
+
+  .auth-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 12px 48px rgba(26,18,8,0.12);
+    border: 1px solid rgba(26,18,8,0.05);
+  }
+
+  .auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .auth-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+
+  .auth-header p {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .auth-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    background: var(--warm);
+    padding: 0.4rem;
+    border-radius: 50px;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 0.7rem;
+    border: none;
+    background: transparent;
+    border-radius: 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .tab.active {
+    background: var(--ink);
+    color: var(--cream);
+    box-shadow: 0 2px 8px rgba(26,18,8,0.15);
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    border: 1.5px solid rgba(26,18,8,0.15);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--ink);
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,151,58,0.1);
+  }
+
+  .form-group input::placeholder {
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  .forgot-link {
+    display: block;
+    text-align: right;
+    font-size: 0.82rem;
+    color: var(--gold);
+    text-decoration: none;
+    margin-top: -0.8rem;
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+  }
+
+  .forgot-link:hover {
+    color: var(--ink);
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .btn-submit:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.8rem 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(26,18,8,0.1);
+  }
+
+  .social-btns {
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  .btn-social {
+    flex: 1;
+    padding: 0.85rem;
+    border: 1.5px solid rgba(26,18,8,0.15);
+    background: #fff;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-social:hover {
+    border-color: var(--gold);
+    background: var(--warm);
+  }
+
+  .form-content {
+    display: none;
+  }
+
+  .form-content.active {
+    display: block;
+    animation: fadeIn 0.3s;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.8rem 1.8rem;
+    border-radius: 40px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    box-shadow: 0 8px 32px rgba(26,18,8,0.25);
+    z-index: 300;
+    transition: transform 0.35s cubic-bezier(.23,1,.32,1), opacity 0.3s;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  @media (max-width: 600px) {
+    .logo { left: 1.5rem; top: 1.5rem; font-size: 1.4rem; }
+    .back-link { right: 1.5rem; top: 1.5rem; }
+    .auth-card { padding: 2rem 1.5rem; }
+    .auth-header h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="logo">InkWell<span>.</span></a>
+<a href="index.html" class="back-link">← Back to store</a>
+
+<div class="toast" id="toast"></div>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Welcome Back</h1>
+      <p>Sign in to continue your reading journey</p>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="tab active" onclick="switchTab('login')">Login</button>
+      <button class="tab" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginForm" class="form-content active">
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" placeholder="••••••••" required>
+        </div>
+        <a href="#" class="forgot-link">Forgot password?</a>
+        <button type="submit" class="btn-submit">Sign In →</button>
+      </form>
+
+      <div class="divider">or continue with</div>
+      
+      <div class="social-btns">
+        <button class="btn-social" onclick="showToast('🔐 Google login coming soon!')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google
+        </button>
+        <button class="btn-social" onclick="showToast('🍎 Apple login coming soon!')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          Apple
+        </button>
+      </div>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div id="signupForm" class="form-content">
+      <form onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" placeholder="Jane Doe" required>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" placeholder="••••••••" required minlength="8">
+        </div>
+        <button type="submit" class="btn-submit">Create Account →</button>
+      </form>
+
+      <div class="divider">or sign up with</div>
+      
+      <div class="social-btns">
+        <button class="btn-social" onclick="showToast('🔐 Google signup coming soon!')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Google
+        </button>
+        <button class="btn-social" onclick="showToast('🍎 Apple signup coming soon!')">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          Apple
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  // If already logged in, go home
+  if(getSession()) window.location.href = 'index.html';
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+    if (tab === 'login') {
+      document.getElementById('loginForm').classList.add('active');
+      document.querySelector('.auth-header h1').textContent = 'Welcome Back';
+      document.querySelector('.auth-header p').textContent = 'Sign in to continue your reading journey';
+    } else {
+      document.getElementById('signupForm').classList.add('active');
+      document.querySelector('.auth-header h1').textContent = 'Join InkWell';
+      document.querySelector('.auth-header p').textContent = 'Create an account to start reading';
+    }
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const btn      = e.target.querySelector('.btn-submit');
+    const email    = e.target.querySelector('[type=email]').value.trim();
+    const password = e.target.querySelector('[type=password]').value;
+    btn.textContent = 'Signing in…'; btn.disabled = true;
+    const result = await loginUser(email, password);
+    btn.textContent = 'Sign In →'; btn.disabled = false;
+    if (!result.ok) { showToast('❌ ' + result.msg); return; }
+    showToast('✨ Welcome back! Redirecting…');
+    setTimeout(() => window.location.href = 'index.html', 1400);
+  }
+
+  async function handleSignup(e) {
+    e.preventDefault();
+    const btn      = e.target.querySelector('.btn-submit');
+    const inputs   = e.target.querySelectorAll('input');
+    const name     = inputs[0].value.trim();
+    const email    = inputs[1].value.trim();
+    const password = inputs[2].value;
+    if (password.length < 8) { showToast('❌ Password must be at least 8 characters.'); return; }
+    btn.textContent = 'Creating account…'; btn.disabled = true;
+    const result = await registerUser(name, email, password);
+    btn.textContent = 'Create Account →'; btn.disabled = false;
+    if (!result.ok) { showToast('❌ ' + result.msg); return; }
+    showToast('🎉 Account created! Welcome to InkWell!');
+    setTimeout(() => window.location.href = 'index.html', 1400);
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+  }
+</script>
+</body>
+</html>
