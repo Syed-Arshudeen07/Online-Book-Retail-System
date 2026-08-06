@@ -1,4 +1,4 @@
-# 🌐 Online Booking Portal
+# 🌐 InkWell
 
 A full-stack web application designed to streamline the booking process with real-time availability, user-friendly interface, and efficient data handling.
 
